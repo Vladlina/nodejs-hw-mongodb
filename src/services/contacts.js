@@ -19,13 +19,11 @@ export const getAllContacts = async ({
     .sort({ [sortBy]: sortOrder })
     .exec();
 
-  const contactsCount = await ContactsCollection.find().countDocuments();
+  const contactsCount = await ContactsCollection.find()
+    .merge(contactsQuery)
+    .countDocuments();
 
-  const paginationData = calculatePaginationData({
-    total: contactsCount,
-    page,
-    perPage,
-  });
+  const paginationData = calculatePaginationData(contactsCount, page, perPage);
   return { data: contacts, ...paginationData };
 };
 
