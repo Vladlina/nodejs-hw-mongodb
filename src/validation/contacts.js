@@ -5,7 +5,7 @@ export const createContactSchema = Joi.object({
   phoneNumber: Joi.string()
     .pattern(/^\+?3?8?(0\d{9})$/)
     .required(),
-  email: Joi.string().email().required(),
+  email: Joi.string().email(),
   isFavourite: Joi.boolean(),
   contactType: Joi.string().min(3).max(20),
 });
