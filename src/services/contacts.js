@@ -45,25 +45,35 @@ export const createContact = async (payload, userId) => {
 
 export const updateContact = async (
   contactId,
-  payload,
   userId,
+  payload,
   options = {},
 ) => {
-  const rawResult = await ContactsCollection.findOneAndUpdate(
+  const contactIdStr = String(contactId);
+  const userIdStr = String(userId);
+
+  if (
+    !contactIdStr.match(/^[0-9a-fA-F]{24}$/) ||
+    !userIdStr.match(/^[0-9a-fA-F]{24}$/)
+  ) {
+    throw new Error('Invalid ID format');
+  }
+
+  const result = await ContactsCollection.findOneAndUpdate(
     { _id: contactId, userId },
     payload,
     {
       new: true,
-      includeResultMetadata: true,
       ...options,
     },
   );
 
-  if (!rawResult || !rawResult.value) return null;
+  if (!result) {
+    return null;
+  }
 
   return {
-    contact: rawResult.value,
-    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
+    contact: result,
   };
 };
 
