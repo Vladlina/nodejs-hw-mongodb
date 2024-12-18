@@ -87,8 +87,8 @@ export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const userId = req.user._id;
   const photo = req.file;
-  let photoUrl = null;
 
+  let photoUrl = undefined;
   if (photo) {
     if (env('ENABLE_CLOUDINARY') === 'true') {
       photoUrl = await saveFileToCloudinary(photo);
@@ -99,8 +99,11 @@ export const patchContactController = async (req, res, next) => {
 
   const updatedData = {
     ...req.body,
-    photo: photoUrl,
   };
+
+  if (photoUrl) {
+    updatedData.photo = photoUrl;
+  }
 
   const result = await updateContact(contactId, userId, updatedData);
 
