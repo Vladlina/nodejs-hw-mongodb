@@ -16,10 +16,8 @@ const contactSchema = new Schema(
       enum: ['work', 'home', 'personal'],
       required: true,
     },
-    userId: { type: Schema.Types.ObjectId, ref: 'users', required: true },
-    photo: { type: String },
+    userId: { type: Schema.Types.ObjectId, ref: 'users' },
   },
-
   { timestamps: true, versionKey: false },
 );
 
