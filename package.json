@@ -42,6 +42,7 @@
     "node-path": "^0.0.3",
     "nodemailer": "^6.9.16",
     "pino-http": "^10.3.0",
-    "pino-pretty": "^13.0.0"
+    "pino-pretty": "^13.0.0",
+    "swagger-ui-express": "^5.0.1"
   }
 }
