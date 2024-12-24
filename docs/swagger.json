@@ -141,8 +141,8 @@
               }
             }
           },
-          "404": {
-            "$ref": "#/components/responses/404"
+          "401": {
+            "$ref": "#/components/responses/401"
           }
         }
       },
@@ -229,8 +229,8 @@
               }
             }
           },
-          "404": {
-            "$ref": "#/components/responses/404"
+          "401": {
+            "$ref": "#/components/responses/401"
           }
         }
       }
@@ -284,6 +284,9 @@
             }
           },
           "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
             "$ref": "#/components/responses/404"
           }
         }
@@ -381,6 +384,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
           "404": {
             "$ref": "#/components/responses/404"
           }
@@ -411,6 +417,9 @@
           "204": {
             "$ref": "#/components/responses/204"
           },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
           "404": {
             "$ref": "#/components/responses/404"
           }
@@ -428,16 +437,7 @@
     "schemas": {
       "contact": {
         "type": "object",
-        "required": [
-          "_id",
-          "name",
-          "phoneNumber",
-          "email",
-          "isFavourite",
-          "contactType",
-          "userId",
-          "photo"
-        ],
+        "required": ["_id", "name", "phoneNumber", "contactType"],
         "properties": {
           "_id": {
             "description": "Contact's id",
@@ -469,11 +469,6 @@
             "type": "string",
             "enum": ["work", "home", "personal"]
           },
-          "userId": {
-            "description": "Contact's user id",
-            "type": "string",
-            "example": "65e4decdd286b30065d54af9"
-          },
           "photo": {
             "description": "Link to contact's photo",
             "type": "string",
@@ -485,6 +480,37 @@
     "responses": {
       "204": {
         "description": "No content"
+      },
+      "401": {
+        "description": "Unauthorized error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["status", "message", "data"],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 401
+                },
+                "message": {
+                  "type": "string",
+                  "example": "UnauthorizedError"
+                },
+                "data": {
+                  "type": "object",
+                  "required": ["message"],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Access token expired"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       "404": {
         "description": "Contact not found",
