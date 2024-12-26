@@ -14,7 +14,7 @@ tags:
   - name: Auth
     description: Auth operations.
 servers:
-  - url: http://127.0.0.1:8080
+  - url: http://127.0.0.1:3000
   - url: https://nodejs-hw-mongodb-ebpg.onrender.com
 paths:
   # тут будуть посилання на ендпоінти
