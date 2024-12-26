@@ -13,19 +13,6 @@ import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { env } from '../utils/env.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
-export function ensureAuthenticated(req, res, next) {
-  if (!req.user) {
-    next(
-      createHttpError(
-        401,
-        'Unauthorized: You must log in to access this resource',
-      ),
-    );
-    return;
-  }
-  next();
-}
-
 export async function getContactsController(req, res, next) {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
@@ -72,10 +59,6 @@ export const postContactController = async (req, res, next) => {
   const photo = req.file;
   let photoUrl = null;
 
-  if (!req.body.contactType) {
-    return next(createHttpError(400, "Field 'contactType' is required"));
-  }
-
   if (photo) {
     if (env('ENABLE_CLOUDINARY') === 'true') {
       photoUrl = await saveFileToCloudinary(photo);
@@ -90,8 +73,6 @@ export const postContactController = async (req, res, next) => {
     photo: photoUrl,
   };
 
-  delete contactData.userId;
-
   const contact = await createContact(contactData);
 
   res.status(201).json({
@@ -99,14 +80,15 @@ export const postContactController = async (req, res, next) => {
     message: 'Successfully created a contact!',
     data: contact,
   });
+  console.log('Запит на створення контакту', req.body);
 };
 
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const userId = req.user._id;
   const photo = req.file;
+  let photoUrl = null;
 
-  let photoUrl = undefined;
   if (photo) {
     if (env('ENABLE_CLOUDINARY') === 'true') {
       photoUrl = await saveFileToCloudinary(photo);
@@ -115,19 +97,10 @@ export const patchContactController = async (req, res, next) => {
     }
   }
 
-  if (!req.body.contactType) {
-    return next(createHttpError(400, "Field 'contactType' is required"));
-  }
-
   const updatedData = {
     ...req.body,
+    photo: photoUrl,
   };
-
-  delete updatedData.userId;
-
-  if (photoUrl) {
-    updatedData.photo = photoUrl;
-  }
 
   const result = await updateContact(contactId, userId, updatedData);
 
