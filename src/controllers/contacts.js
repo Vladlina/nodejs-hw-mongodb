@@ -69,8 +69,8 @@ export const postContactController = async (req, res, next) => {
 
   const contactData = {
     ...req.body,
-    userId,
     photo: photoUrl,
+    userId,
   };
 
   const contact = await createContact(contactData);
@@ -80,7 +80,8 @@ export const postContactController = async (req, res, next) => {
     message: 'Successfully created a contact!',
     data: contact,
   });
-  console.log('Запит на створення контакту', req.body);
+
+  console.log('Запит на створення контакту:', req.body);
 };
 
 export const patchContactController = async (req, res, next) => {
